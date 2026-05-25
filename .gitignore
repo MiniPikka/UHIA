@@ -1,0 +1,18 @@
+# Rust build artifacts
+/target/
+*.efi
+
+# QEMU runtime files
+/tmp/
+*.log
+*.sock
+
+# OVMF firmware (download separately)
+OVMF.fd
+OVMF*.fd
+
+# ESP directory with built binaries
+ironanchor/esp/
+
+# swtpm state
+/swtpm*/
