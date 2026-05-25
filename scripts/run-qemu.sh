@@ -27,16 +27,16 @@ if [ -S "${TPM_SOCK:-}" ]; then
     )
 fi
 
-echo "[*] Running IronAnchor in QEMU..."
+echo "[*] Running UHIA in QEMU..."
 echo "[*] OVMF: $OVMF_PATH"
 echo "[*] ESP:  $ESP_PATH"
 
 if [ "${USE_DXE:-0}" = "1" ]; then
     echo "[*] Mode: DXE Driver"
-    cp "$ESP_PATH/EFI/IronAnchor/IronAnchorDxe.efi" "$ESP_PATH/EFI/BOOT/BOOTX64.EFI"
+    cp "$ESP_PATH/EFI/UHIA/UHIA_Dxe.efi" "$ESP_PATH/EFI/BOOT/BOOTX64.EFI"
 else
     echo "[*] Mode: EFI Application"
-    cp "$ESP_PATH/EFI/IronAnchor/IronAnchor.efi" "$ESP_PATH/EFI/BOOT/BOOTX64.EFI"
+    cp "$ESP_PATH/EFI/UHIA/UHIA.efi" "$ESP_PATH/EFI/BOOT/BOOTX64.EFI"
 fi
 
 qemu-system-x86_64 "${QEMU_ARGS[@]}"

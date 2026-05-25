@@ -3,12 +3,12 @@ pub mod types;
 use uefi::prelude::*;
 use uefi::table::runtime::{VariableAttributes, VariableVendor};
 
-use self::types::IRONANCHOR_VENDOR_GUID;
+use self::types::UHIA_VENDOR_GUID;
 
 /// Read the persistent device GUID from EFI Variable, or generate and store a new one
 pub fn get_or_create_device_guid(runtime: &RuntimeServices) -> [u8; 16] {
-    let var_name = cstr16!("IronAnchorDeviceGuid");
-    let vendor = VariableVendor(IRONANCHOR_VENDOR_GUID);
+    let var_name = cstr16!("UHIADeviceGuid");
+    let vendor = VariableVendor(UHIA_VENDOR_GUID);
 
     // Try to read existing GUID
     match runtime.get_variable(var_name, &vendor, &mut [0u8; 16]) {
@@ -45,7 +45,7 @@ fn generate_hardware_guid() -> [u8; 16] {
     }
 
     // Mix in a fixed project identifier
-    let project_id: u64 = 0x49726F6E416E6368; // "IronAnch" in ASCII
+    let project_id: u64 = 0x5548494100000000; // "UHIA" in ASCII
 
     // Simple mixing function
     seed ^= project_id;

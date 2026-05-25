@@ -6,10 +6,15 @@ extern crate alloc;
 use core::fmt::Write;
 use uefi::prelude::*;
 
-use ironanchor::{efivars, identity, network, smbios, tpm};
+use uhia::{efivars, identity, network, smbios, tpm};
 
+/// DXE Driver entry point
+///
+/// Unlike an EFI Application that runs and exits, a DXE Driver
+/// is loaded by the firmware and can provide services.
+/// This driver performs identity collection and then signals readiness.
 #[entry]
-fn main(_image: Handle, mut system_table: SystemTable<Boot>) -> Status {
+fn efi_main(_image: Handle, mut system_table: SystemTable<Boot>) -> Status {
     uefi::helpers::init(&mut system_table).unwrap();
 
     // Collect all data before borrowing stdout
@@ -26,11 +31,10 @@ fn main(_image: Handle, mut system_table: SystemTable<Boot>) -> Status {
 
     let stdout = system_table.stdout();
     stdout.clear().unwrap();
-    let _ = stdout.write_str("IronAnchor v0.6.0 — UEFI Hardware Identity Agent\r\n");
-    let _ = stdout.write_str("Phase 6: Network Reporting\r\n");
+    let _ = stdout.write_str("UHIA v0.1.0 — UEFI Hardware Identity Agent (DXE)\r\n");
 
     // Display device GUID
-    let _ = stdout.write_str("\r\n=== Device GUID (Persistent) ===\r\n  ");
+    let _ = stdout.write_str("=== Device GUID (Persistent) ===\r\n  ");
     for (i, b) in device_guid.iter().enumerate() {
         if i == 4 || i == 6 || i == 8 || i == 10 {
             let _ = stdout.write_char('-');
@@ -54,7 +58,6 @@ fn main(_image: Handle, mut system_table: SystemTable<Boot>) -> Status {
         Ok(tpm_info) => {
             tpm::display::display_tpm_info(stdout, tpm_info);
 
-            // Display PCR values if available
             if tpm_info.present {
                 match &pcr_result {
                     Ok(pcrs) => {
@@ -85,5 +88,9 @@ fn main(_image: Handle, mut system_table: SystemTable<Boot>) -> Status {
         }
     }
 
+    let _ = stdout.write_str("\r\n=== DXE Driver Loaded ===\r\n");
+
+    // Return SUCCESS to indicate driver is loaded and ready
+    // In a real DXE driver, this would register protocols and services
     Status::SUCCESS
 }

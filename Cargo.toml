@@ -1,20 +1,20 @@
 [package]
-name = "ironanchor"
+name = "uhia"
 version = "0.1.0"
 edition = "2021"
 description = "UEFI Hardware Identity Agent"
 
 [lib]
-name = "ironanchor"
+name = "uhia"
 path = "src/lib.rs"
 
 [[bin]]
-name = "ironanchor"
+name = "uhia"
 path = "src/main.rs"
 
 [[bin]]
-name = "ironanchor_dxe"
-path = "src/bin/ironanchor_dxe.rs"
+name = "uhia_dxe"
+path = "src/bin/uhia_dxe.rs"
 
 [dependencies]
 uefi = { version = "0.28", features = ["alloc"] }
